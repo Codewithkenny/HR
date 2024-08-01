@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
 
 // Routes
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("Welcome to Our Backend Services !");
 });
 

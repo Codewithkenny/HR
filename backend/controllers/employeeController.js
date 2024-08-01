@@ -1,13 +1,15 @@
 const Employee = require("../models/employee");
 const Department = require("../models/department");
-const { Sequelize, Op } = require("sequelize");
+const Profile = require("../models/profile");
 
-
-// Get all employees
+// Get all employees with profiles
 exports.getAllEmployees = async (req, res) => {
   try {
     const employees = await Employee.findAll({
-      include: "Department", 
+      include: [
+        { model: Department, as: "Department" },
+        { model: Profile, as: "Profile" },
+      ],
     });
     res.json(employees);
   } catch (error) {
@@ -16,10 +18,15 @@ exports.getAllEmployees = async (req, res) => {
   }
 };
 
-// Get an employee by ID
+// Get an employee by ID with profile
 exports.getEmployeeById = async (req, res) => {
   try {
-    const employee = await Employee.findByPk(req.params.id);
+    const employee = await Employee.findByPk(req.params.id, {
+      include: [
+        { model: Department, as: "Department" },
+        { model: Profile, as: "Profile" },
+      ],
+    });
     if (employee) {
       res.status(200).json(employee);
     } else {
@@ -32,19 +39,29 @@ exports.getEmployeeById = async (req, res) => {
 
 // Add a new employee
 exports.addEmployee = async (req, res) => {
-  const { first_name, last_name, email, position, department, date_of_hire } =
-    req.body;
+  const {
+    first_name,
+    last_name,
+    email,
+    position,
+    department_id,
+    date_of_hire,
+    profile_id, // Ensure this field is provided if profiles are linked
+  } = req.body;
+
   try {
     const newEmployee = await Employee.create({
       first_name,
       last_name,
       email,
       position,
-      department,
+      department_id,
       date_of_hire,
+      profile_id,
     });
     res.status(201).json(newEmployee);
   } catch (error) {
+    console.error("Validation error:", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -56,10 +73,11 @@ exports.updateEmployee = async (req, res) => {
     last_name,
     email,
     position,
-    department,
+    department_id,
     date_of_hire,
-    status,
+    profile_id,
   } = req.body;
+
   try {
     const employee = await Employee.findByPk(req.params.id);
     if (employee) {
@@ -68,9 +86,9 @@ exports.updateEmployee = async (req, res) => {
         last_name,
         email,
         position,
-        department,
+        department_id,
         date_of_hire,
-        status,
+        profile_id,
       });
       res.status(200).json(employee);
     } else {
@@ -105,5 +123,3 @@ exports.getTotalEmployees = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-

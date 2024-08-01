@@ -48,11 +48,12 @@ exports.getTotalDepartments = async (req, res) => {
 
 // Add a new department
 exports.addDepartment = async (req, res) => {
-  const { name } = req.body;
   try {
-    const newDepartment = await Department.create({ name });
+    const { name, description } = req.body;
+    const newDepartment = await Department.create({ name, description });
     res.status(201).json(newDepartment);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error adding department:', error);
+    res.status(500).json({ error: 'An error occurred while adding the department' });
   }
 };

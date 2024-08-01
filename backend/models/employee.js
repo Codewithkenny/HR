@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const sequelize = require("../config/db"); 
-const Department = require("./department");
+const sequelize = require("../config/db");
+const Department = require("./department"); 
+const Profile = require("./profile"); 
 
 const Employee = sequelize.define(
   "Employee",
@@ -31,19 +32,29 @@ const Employee = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "Department", 
+        model: "departments",
+        key: "id",
+      },
+    },
+    profile_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "profiles",
         key: "id",
       },
     },
   },
   {
-    tableName: "employees", 
-    timestamps: false, 
+    tableName: "employees",
+    timestamps: false,
   }
 );
 
-// Define the association
+// Define associations
 Employee.belongsTo(Department, { foreignKey: "department_id" });
 Department.hasMany(Employee, { foreignKey: "department_id" });
+
+Employee.belongsTo(Profile, { foreignKey: "profile_id" });
+Profile.hasOne(Employee, { foreignKey: "profile_id" });
 
 module.exports = Employee;

@@ -1,4 +1,3 @@
-
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
@@ -6,7 +5,7 @@ const Department = sequelize.define(
   "Department",
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       autoIncrement: true,
       primaryKey: true,
     },
@@ -16,12 +15,11 @@ const Department = sequelize.define(
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: true,
     },
   },
   {
     tableName: "departments",
-    timestamps: false, 
+    timestamps: false,
   }
 );
 

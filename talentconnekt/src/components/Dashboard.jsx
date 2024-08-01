@@ -26,9 +26,8 @@ const Dashboard = () => {
                 setNewHiresCount(newHiresResponse.data.count);
 
                 const departmentsResponse = await axios.get('http://localhost:5000/api/departments');
-                if (departmentsResponse.data) {
-                    setDepartments(departmentsResponse.data.departments);
-                }
+                console.log('Departments fetched:', departmentsResponse.data.departments); // Add this line
+                setDepartments(departmentsResponse.data.departments);
 
                 const departmentResponse = await axios.get('http://localhost:5000/api/departments/count');
                 setTotalDepartments(departmentResponse.data.total);
@@ -45,7 +44,7 @@ const Dashboard = () => {
     const handleAddEmployee = async () => {
         try {
             await axios.post('http://localhost:5000/api/employees', employeeForm);
-            setEmployeeForm({ firstName: '', lastName: '', email: '', position: '',date_of_hire: '', departmentId: '' });
+            setEmployeeForm({ firstName: '', lastName: '', email: '', position: '', departmentId: '' });
             setIsEmployeeModalOpen(false);
             toast.success('Employee added successfully!');
         } catch (error) {
@@ -226,27 +225,20 @@ const Dashboard = () => {
                                                     className="w-full px-3 py-2 border rounded-md"
                                                 >
                                                     <option value="">Select Department</option>
-                                                    {departments.map(dept => (
-                                                        <option key={dept.id} value={dept.id}>{dept.name}</option>
+                                                    {departments.map(department => (
+                                                        <option key={department.id} value={department.id}>
+                                                            {department.name}
+                                                        </option>
                                                     ))}
                                                 </select>
                                             </div>
-                                            <div className="flex gap-4">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setIsEmployeeModalOpen(false)}
-                                                    className="inline-flex justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    onClick={handleAddEmployee}
-                                                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                                                >
-                                                    Add Employee
-                                                </button>
-                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={handleAddEmployee}
+                                                className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+                                            >
+                                                Add Employee
+                                            </button>
                                         </form>
                                     </div>
                                 </Dialog.Panel>
@@ -306,24 +298,15 @@ const Dashboard = () => {
                                                     value={departmentForm.description}
                                                     onChange={(e) => setDepartmentForm({ ...departmentForm, description: e.target.value })}
                                                     className="w-full px-3 py-2 border rounded-md"
-                                                />
+                                                ></textarea>
                                             </div>
-                                            <div className="flex gap-4">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setIsDepartmentModalOpen(false)}
-                                                    className="inline-flex justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    onClick={handleAddDepartment}
-                                                    className="inline-flex justify-center rounded-md border border-transparent bg-green-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                                                >
-                                                    Add Department
-                                                </button>
-                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={handleAddDepartment}
+                                                className="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
+                                            >
+                                                Add Department
+                                            </button>
                                         </form>
                                     </div>
                                 </Dialog.Panel>
